@@ -1,0 +1,156 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Акция - Скидка 50% на игры</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #ff5733, #ff8e6b);
+            color: #333;
+        }
+        .header {
+            background-color: #ff5733;
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: bold;
+        }
+        .promotion-banner {
+            background: url('promo-image.jpg') no-repeat center center;
+            background-size: cover;
+            height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        .promotion-banner h2 {
+            font-size: 2.8em;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px 40px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        .promotion-banner h2:hover {
+            transform: scale(1.1);
+        }
+        .details {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .details:hover {
+            box-shadow: 0px 6px 12px rgba(0,0,0,0.2);
+        }
+        .details h3 {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ff5733;
+            margin-bottom: 20px;
+        }
+        .details p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #ff5733;
+            color: white;
+            padding: 18px 40px;
+            font-size: 1.5em;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .cta-button:hover {
+            background-color: #d94c2a;
+            transform: scale(1.05);
+        }
+        .faq {
+            background-color: #f4f4f4;
+            padding: 40px;
+            text-align: center;
+        }
+        .faq h3 {
+            font-size: 2.5em;
+            color: #ff5733;
+            margin-bottom: 20px;
+        }
+        .faq p {
+            font-size: 1.2em;
+            color: #333;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .footer a {
+            color: #ff5733;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Заголовок акции -->
+    <div class="header">
+        <h1>Скидка 50% на все игры!</h1>
+    </div>
+
+    <!-- Баннер акции -->
+    <div class="promotion-banner">
+        <h2>Только сегодня — бесплатное время на ПК!</h2>
+    </div>
+
+    <!-- Детали акции -->
+    <div class="details">
+        <h3>Условия акции</h3>
+        <p>Получите 30 минут игры бесплатно при покупке одного часа! Акция действует с 1 по 15 декабря.</p>
+        <p>Акция распространяется на все игры. Применяется только при оплате через сайт.</p>
+        <p><strong>Не пропустите! Только до 15 декабря!</strong></p>
+
+        <!-- Кнопка участия -->
+        <a href="#" class="cta-button">Принять участие</a>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq">
+        <h3>Часто задаваемые вопросы</h3>
+        <p><strong>Как участвовать в акции?</strong> Просто оплатите время через наш сайт и получите бонус.</p>
+        <p><strong>До какого числа действует акция?</strong> Акция действует до 15 декабря.</p>
+        <p><strong>Есть ли ограничения?</strong> Скидка действует только для новых пользователей.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Следите за новыми акциями в наших <a href="#">социальных сетях</a>!</p>
+        <p>&copy; 2024 Гипер Игра 3000</p>
+    </div>
+
+</body>
+</html>

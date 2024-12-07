@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Специальные предложения</title>
+    <style>
+        /* Общий стиль */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(90deg, #ff6a00, #ff9900);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .menu-item {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .menu-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .menu-item h3 {
+            font-size: 1.8em;
+            margin: 10px 0;
+            color: #222;
+        }
+
+        .menu-item .price-container {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .menu-item .old-price {
+            text-decoration: line-through;
+            color: #aaa;
+            font-size: 1em;
+        }
+
+        .menu-item .price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .menu-item p {
+            font-size: 1em;
+            color: #555;
+            margin: 15px 0;
+        }
+
+        .menu-item .order-btn {
+            background: linear-gradient(90deg, #ff6a00, #ff9900);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .menu-item .order-btn:hover {
+            background: linear-gradient(90deg, #ff9900, #ff6a00);
+        }
+
+        .special-offer::before {
+            content: "SPECIAL!";
+            position: absolute;
+            top: 10px;
+            left: -30px;
+            background: #ff6a00;
+            color: #fff;
+            padding: 5px 30px;
+            transform: rotate(-45deg);
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    Специальные предложения
+</header>
+
+<section id="menu"></section>
+
+<script>
+    // Данные для специальных предложений с изображениями
+    const specialOffers = [
+        {
+            name: "Бургер с сыром и беконом",
+            price: 799,
+            oldPrice: 999,
+            description: "Сочный бургер с хрустящим беконом и расплавленным сыром.",
+            image: "{% static 'images/offers1.jpeg' %}"
+        },
+        {
+            name: "Крылышки Баффало",
+            price: 599,
+            oldPrice: 749,
+            description: "Острые крылышки Баффало с соусом ранч на гарнир.",
+            image: "{% static 'images/offers2.jpeg' %}"
+        },
+        {
+            name: "Начос с начинкой",
+            price: 699,
+            oldPrice: 899,
+            description: "Хрустящие начос с сыром, халапеньо и гуакамоле.",
+            image: "{% static 'images/offers3.jpeg' %}"
+        },
+        {
+            name: "Классические панкейки",
+            price: 499,
+            oldPrice: 599,
+            description: "Пышные панкейки с сиропом и маслом.",
+            image: "{% static 'images/offers4.jpeg' %}"
+        },
+        {
+            name: "Идеальный молочный коктейль",
+            price: 399,
+            oldPrice: 499,
+            description: "Густой молочный коктейль: шоколадный, ванильный или клубничный.",
+            image: "{% static 'images/offers5.jpg' %}"
+        }
+    ];
+
+    // Функция генерации меню для специальных предложений
+    function generateSpecialOffers(offers) {
+        const menuContainer = document.getElementById('menu');
+        menuContainer.innerHTML = ""; // Очистка перед обновлением
+
+        offers.forEach(offer => {
+            // Создание элемента
+            const itemElement = document.createElement('div');
+            itemElement.className = 'menu-item special-offer';
+
+            const image = document.createElement('img');
+            image.src = offer.image;
+            image.alt = offer.name;
+
+            const name = document.createElement('h3');
+            name.textContent = offer.name;
+
+            const oldPrice = document.createElement('span');
+            oldPrice.className = 'old-price';
+            oldPrice.textContent = `${offer.oldPrice}₽`;
+
+            const price = document.createElement('span');
+            price.className = 'price';
+            price.textContent = `${offer.price}₽`;
+
+            const description = document.createElement('p');
+            description.textContent = offer.description;
+
+            const button = document.createElement('button');
+            button.textContent = 'Заказать';
+            button.className = 'order-btn';
+            button.onclick = () => {
+                alert(`Вы выбрали "${offer.name}". Мы скоро обработаем ваш заказ!`);
+            };
+
+            // Собираем элементы
+            const priceContainer = document.createElement('div');
+            priceContainer.className = 'price-container';
+            priceContainer.appendChild(oldPrice);
+            priceContainer.appendChild(price);
+
+            itemElement.appendChild(image);
+            itemElement.appendChild(name);
+            itemElement.appendChild(priceContainer);
+            itemElement.appendChild(description);
+            itemElement.appendChild(button);
+
+            menuContainer.appendChild(itemElement);
+        });
+    }
+
+    // Вызов функции при загрузке страницы
+    document.addEventListener('DOMContentLoaded', () => {
+        generateSpecialOffers(specialOffers);
+    });
+</script>
+
+</body>
+</html>

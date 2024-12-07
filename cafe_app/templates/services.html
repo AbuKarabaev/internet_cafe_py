@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Услуги Интернет-Кафе</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f6fa;
+            color: #333;
+        }
+
+        header {
+            background-color: #5264AE;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav ul li a.active {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+
+        .service-card, .tariff-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .service-card:hover, .tariff-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-card h3, .tariff-card h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #5264AE;
+        }
+
+        .service-card p, .tariff-card p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .btn {
+            background-color: #5264AE;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #39499a;
+        }
+
+        .timer {
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .timer span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #5264AE;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Услуги Интернет-Кафе</h1>
+        <nav>
+            <ul>
+                <li><a href="/" class="{% if request.path == '/' %}active{% endif %}" aria-label="Главная страница">Главная</a></li>
+                <li><a href="/tables/" class="{% if request.path == '/tables/' %}active{% endif %}" aria-label="Выбор стола">Выбор стола</a></li>
+                <li><a href="/statistics/" class="{% if request.path == '/statistics/' %}active{% endif %}" aria-label="Статистика">Статистика</a></li>
+                <li><a href="/profile/" class="{% if request.path == '/profile/' %}active{% endif %}" aria-label="Профиль">Профиль</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Таймер оставшегося времени -->
+        <div class="timer">
+            <p>Оставшееся время:</p>
+            <span id="time-left">60:00</span>
+        </div>
+
+        <!-- Тарифы -->
+        <div class="tariff-card">
+            <div>
+                <h3>Тариф "Базовый"</h3>
+                <p>Скорость интернета: до 10 Мбит/с</p>
+                <p>Цена: 100 руб./час</p>
+            </div>
+            <button class="btn" onclick="selectTariff('Базовый', 10, 100)">Выбрать</button>
+        </div>
+
+        <div class="tariff-card">
+            <div>
+                <h3>Тариф "Продвинутый"</h3>
+                <p>Скорость интернета: до 50 Мбит/с</p>
+                <p>Цена: 200 руб./час</p>
+            </div>
+            <button class="btn" onclick="selectTariff('Продвинутый', 50, 200)">Выбрать</button>
+        </div>
+
+        <div class="tariff-card">
+            <div>
+                <h3>Тариф "Премиум"</h3>
+                <p>Скорость интернета: до 100 Мбит/с</p>
+                <p>Цена: 300 руб./час</p>
+            </div>
+            <button class="btn" onclick="selectTariff('Премиум', 100, 300)">Выбрать</button>
+        </div>
+
+        <!-- Карточки услуг -->
+        <div class="service-card">
+            <div>
+                <h3>Оплата времени</h3>
+                <p>Купить дополнительное время для работы за компьютером.</p>
+            </div>
+            <button class="btn" onclick="extendTime(30)">Продлить на 30 минут</button>
+        </div>
+
+        <div class="service-card">
+            <div>
+                <h3>Печать документов</h3>
+                <p>Отправьте ваши файлы на печать прямо из вашего аккаунта.</p>
+            </div>
+            <button class="btn" onclick="alert('Печать начата!')">Заказать печать</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Интернет-Кафе. Все права защищены.</p>
+    </footer>
+
+    <script>
+        // Таймер обратного отсчёта
+        let timeLeft = 1; // Время в секундах (1 час)
+        let currentTariff = null;
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        function updateTimer() {
+            const timerElement = document.getElementById('time-left');
+            timerElement.textContent = formatTime(timeLeft);
+
+            if (timeLeft > 0) {
+                timeLeft--;
+            } else {
+                alert('Ваше время истекло!');
+                clearInterval(timerInterval);
+            }
+        }
+
+        // Обновление таймера каждую секунду
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Продление времени
+        function extendTime(minutes) {
+            timeLeft += minutes * 60;
+            alert(`Время продлено на ${minutes} минут.`);
+        }
+
+        // Выбор тарифа
+        function selectTariff(name, speed, price) {
+            currentTariff = { name, speed, price };
+            alert(`Вы выбрали тариф "${name}" со скоростью ${speed} Мбит/с за ${price} руб./час.`);
+        }
+    </script>
+</body>
+
+</html>

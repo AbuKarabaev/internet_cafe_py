@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню нашего интернет-кафе</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('{% static "images/font5.webp" %}');
+            background-color: #f4f4f4;
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        header nav ul li {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin: 100px 0 20px 0;
+            text-align: center;
+        }
+
+        .filters {
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .filters select, .filters input {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .item {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .item img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .item h3 {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .item .price {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .add-to-cart {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            position: relative;
+            top: 161px;
+        }
+
+        footer .socials a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .cart-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .footer-info {
+            margin-top: 20px;
+        }
+
+        .footer-info a {
+            color: white;
+            text-decoration: none;
+        }
+        .vvdd{
+            color: azure;
+        }
+
+        /* Мобильная версия */
+        @media screen and (max-width: 768px) {
+            header {
+                text-align: left;
+                padding: 10px;
+            }
+
+            header nav ul {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .menu-items {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .filters {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .item {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Откройте для себя наш ассортимент</h1>
+        <nav>
+            <ul>
+                <li><a href="/drinks/" class="{% if request.path == '/' %}active{% endif %}" aria-label="Главная страница">Напитки</a></li>
+                <li><a href="/" class="{% if request.path == '/' %}active{% endif %}" aria-label="Главная страница">Главная</a></li>
+                <li><a href="/cheesecake/" class="{% if request.path == '/' %}active{% endif %}" aria-label="cheesecake">Снэки и десерты</a></li>
+                </li><li><a href="/dish/" class="{% if request.path == '/' %}active{% endif %}" aria-label="dish">Блюда на заказ</a></li>
+                </li><li><a href="/offers_list/" class="{% if request.path == '/' %}active{% endif %}" aria-label="offers_list">Специальные предложения</a></li>
+                <li><a href="/services/" class="button">Интернет и услуги</a></li>
+                
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="menu">
+            <h2>Меню</h2>
+
+            <div class="filters">
+                <label class='vvdd' for="sort">Сортировать:</label>
+                <select id="sort">
+                    <option value="price">По цене</option>
+                    <option value="popularity">По популярности</option>
+                    <option value="alphabetical">По алфавиту</option>
+                </select>
+
+                <label class='vvdd' for="category">Категория:</label>
+                <select id="category">
+                    <option value="all">Все</option>
+                    <option value="drinks">Напитки</option>
+                    <option value="snacks">Снэки</option>
+                    <option value="meals">Блюда на заказ</option>
+                </select>
+            </div>
+
+            <div class="menu-items">
+                <div class="item" data-category="drinks">
+                    <img src="{% static 'images/cofe.jpeg' %}" alt="Кофе эспрессо">
+                    <h3>Кофе эспрессо</h3>
+                    <p>Традиционный итальянский кофе с насыщенным вкусом</p>
+                    <p class="price">Цена: 150 руб.</p>
+                    <button class="add-to-cart">Добавить в заказ</button>
+                </div>
+                <div class="item" data-category="snacks">
+                    <img src="{% static 'images/chiskek.jpeg' %}" alt="Чизкейк">
+                    <h3>Чизкейк</h3>
+                    <p>Нежный десерт с ванильным вкусом</p>
+                    <p class="price">Цена: 200 руб.</p>
+                    <button class="add-to-cart">Добавить в заказ</button>
+                </div>
+                <!-- Можно добавить больше товаров -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-info">
+            <p>Контакты: +7 123 456-78-90</p>
+            <p>Адрес: ул. Примерная, 12</p>
+            <div class="socials">
+                <a href="#">Facebook</a> | <a href="#">Instagram</a>
+            </div>
+            <a href="#">Политика конфиденциальности</a>
+        </div>
+    </footer>
+
+    <div class="cart-notification">
+        <p>Товар добавлен в корзину</p>
+    </div>
+
+    <script>
+        // Скрипт для добавления товара в корзину и отображения уведомления
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        const cartNotification = document.querySelector('.cart-notification');
+
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                cartNotification.style.display = 'block';
+                setTimeout(() => {
+                    cartNotification.style.display = 'none';
+                }, 2000);
+            });
+        });
+
+        // Функция для сортировки и фильтрации меню
+        document.getElementById('sort').addEventListener('change', () => updateMenu());
+        document.getElementById('category').addEventListener('change', () => updateMenu());
+
+        function updateMenu() {
+            const sortValue = document.getElementById('sort').value;
+            const categoryValue = document.getElementById('category').value;
+            const items = document.querySelectorAll('.item');
+
+            // Фильтрация по категории
+            items.forEach(item => {
+                if (categoryValue === 'all' || item.getAttribute('data-category') === categoryValue) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Сортировка
+            const sortedItems = Array.from(items).sort((a, b) => {
+                if (sortValue === 'price') {
+                    return parseFloat(a.querySelector('.price').textContent.replace('Цена: ', '').replace(' руб.', '')) - 
+                           parseFloat(b.querySelector('.price').textContent.replace('Цена: ', '').replace(' руб.', ''));
+                } else if (sortValue === 'alphabetical') {
+                    return a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent);
+                } else {
+                    return 0; // Для популярности можно добавить логику сортировки
+                }
+            });
+
+            const menuItemsContainer = document.querySelector('.menu-items');
+            menuItemsContainer.innerHTML = '';
+            sortedItems.forEach(item => {
+                menuItemsContainer.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>

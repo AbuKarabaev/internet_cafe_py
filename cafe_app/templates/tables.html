@@ -1,0 +1,254 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Выбор стола</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* Общие стили */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            background-image: url('{% static "images/font1.webp" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: rgba(51, 51, 51, 0.8);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid #ddd;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        header nav a.active {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        header nav a:hover {
+            color: #ddd;
+        }
+
+        .tables-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+            padding: 30px;
+        }
+
+        .table-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .table-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .table-card img {
+            max-width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .table-card h3 {
+            margin-top: 10px;
+            font-size: 1.6em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .table-card p {
+            font-size: 1.1em;
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .table-card button {
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .table-card button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        .table-card button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        /* Уведомления */
+        .notification {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-size: 1.2em;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .notification.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .notification.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Мобильная адаптивность */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .tables-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .table-card {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Выбор стола</h1>
+        <nav>
+            <a href="/" class="{% if request.path == '/' %}active{% endif %}">Главная</a>
+            <a href="/tables/" class="{% if request.path == '/tables/' %}active{% endif %}">Выбор стола</a>
+            <a href="/statistics/" class="{% if request.path == '/statistics/' %}active{% endif %}">Статистика</a>
+            <a href="/profile/" class="{% if request.path == '/profile/' %}active{% endif %}">Профиль</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="notification success" id="success-notification">Стол успешно забронирован!</div>
+        <div class="notification error" id="error-notification">Ошибка при бронировании стола. Попробуйте снова.</div>
+
+        <div id="tables" class="tables-container"></div>
+    </main>
+
+    <script>
+        // Загружаем данные о столах с сервера
+        fetch('/api/tables/')
+            .then(response => response.json())
+            .then(data => {
+                const tablesDiv = document.getElementById('tables');
+                data.forEach(table => {
+                    const tableCard = document.createElement('div');
+                    tableCard.classList.add('table-card');
+                    tableCard.setAttribute('data-id', table.id);
+                    tableCard.innerHTML = `
+                        <img src="{% static 'images/tables/table-${table.id}.jpg' %}" alt="Стол №${table.table_number}">
+                        <h3>Стол №${table.table_number}</h3>
+                        <p>${table.max_seats} мест</p>
+                        <p>${table.status === 'reserved' ? 'Занят' : 'Свободен'}</p>
+                        <button onclick="reserveTable(${table.id})" ${table.status === 'reserved' ? 'disabled' : ''}>Забронировать</button>
+                    `;
+                    tablesDiv.appendChild(tableCard);
+                });
+            });
+
+        // Функция для бронирования стола
+        function reserveTable(tableId) {
+            console.log(`Запрос на бронирование стола с id ${tableId}`);
+            fetch(`/api/tables/${tableId}/`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ reserved: true }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка при бронировании стола');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.reserved) {
+                    showNotification('success');
+                    window.location.reload(); // Перезагружаем страницу для обновления статусов
+                } else {
+                    showNotification('error');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                showNotification('error');
+            });
+        }
+
+        // Функция для отображения уведомлений
+        function showNotification(type) {
+            const notification = document.getElementById(`${type}-notification`);
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

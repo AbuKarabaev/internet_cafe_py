@@ -1,0 +1,270 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Статистика</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Подключение графиков (например, Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Общие стили */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding: 0;
+    background-image: url('{% static "images/font1.webp" %}');
+    background-size: cover;
+    background-position: center;
+    color: gainsboro;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 24px;
+    margin: 0;
+    font-weight: bold;
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
+
+header nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+header nav a:hover,
+header nav a.active {
+    color: #28a745;
+    font-weight: bold;
+}
+
+main {
+    padding: 20px;
+}
+
+/* Статистические карточки */
+.stat-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.stat-card:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transform: scale(1.03);
+}
+
+.stat-card h3 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.stat-card p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+/* График */
+.chart-container {
+    color: gainsboro;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.chart-container canvas {
+    max-width: 100%;
+    background-color: gainsboro;
+    margin-top: 20px;
+}
+
+/* Таблица заказов */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #28a745;
+    color: white;
+    font-size: 1.2em;
+}
+
+table td {
+    font-size: 1.1em;
+}
+
+/* Подвал */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    header h1 {
+        margin-bottom: 15px;
+    }
+
+    .stat-card {
+        width: 100%;
+    }
+
+    table th, table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .chart-container canvas {
+        margin-top: 10px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>Статистика</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/" aria-label="Главная страница">Главная</a></li>
+                <li><a href="/tables/" aria-label="Выбор стола">Выбор стола</a></li>
+                <li><a href="/statistics/" aria-label="Статистика" class="active">Статистика</a></li>
+                <li><a href="/profile/" aria-label="Профиль пользователя">Профиль</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="statistics-overview">
+            <h2>Обзор статистики</h2>
+            <p>Здесь вы можете увидеть информацию о заказах, пользователях и их активности.</p>
+
+            <div class="stat-card">
+                <h3>Общее количество заказов</h3>
+                <p id="total-orders">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Общее количество пользователей</h3>
+                <p id="total-users">0</p>
+            </div>
+        </section>
+
+        <section class="chart-container">
+            <h3>График заказов по дням</h3>
+            <canvas id="ordersChart" width="400" height="200"></canvas>
+        </section>
+
+        <section class="table-container">
+            <h3>Последние заказы</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Номер заказа</th>
+                        <th>Дата</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if orders %}
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.created_at }}</td>
+                                <td>{{ order.status }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3">Нет заказов для отображения.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Интернет-Кафе. Все права защищены.</p>
+    </footer>
+
+    <!-- Подключение скриптов для динамического наполнения данных -->
+    <script>
+        // Пример динамического обновления статистики через JavaScript
+        document.getElementById('total-orders').textContent = 123;  // Пример данных
+        document.getElementById('total-users').textContent = 45;  // Пример данных
+
+        // Пример графика с использованием Chart.js
+        const ctx = document.getElementById('ordersChart').getContext('2d');
+        const ordersChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Пон', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],  // Пример дней недели
+                datasets: [{
+                    label: 'Заказы',
+                    data: [12, 19, 3, 5, 2, 3, 7],  // Пример данных
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

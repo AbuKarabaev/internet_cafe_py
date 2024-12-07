@@ -1,0 +1,318 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню напитков</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #1e88e5;
+            color: #fff;
+            padding: 10px 20px;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            color: aliceblue;
+        }
+
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        header nav ul li {
+            display: inline;
+        }
+
+        header nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        header nav ul li a:hover,
+        header nav ul li a.active {
+            background-color: #1565c0;
+        }
+
+        h1 {
+            margin: 20px 0;
+            font-size: 3rem;
+            color: #1e88e5;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            width: 95%;
+            max-width: 1300px;
+        }
+
+        .drink-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+
+        .drink-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .drink-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .drink-card .content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .drink-card h2 {
+            font-size: 2rem;
+            margin: 10px 0;
+            color: #424242;
+        }
+
+        .drink-card p {
+            margin: 10px 0;
+            font-size: 1rem;
+            color: #616161;
+        }
+
+        .drink-card .price {
+            font-size: 1.8rem;
+            color: #1e88e5;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .drink-card button {
+            background-color: #1e88e5;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .drink-card button:hover {
+            background-color: #1565c0;
+        }
+
+        .cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #fff;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            max-width: 320px;
+            z-index: 1000;
+        }
+
+        .cart h3 {
+            margin: 0 0 15px;
+            font-size: 1.8rem;
+            color: #424242;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .cart-item span {
+            color: #424242;
+        }
+
+        .cart .total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: right;
+            margin: 15px 0;
+            color: #1e88e5;
+        }
+
+        .cart button {
+            background-color: #43a047;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cart button:hover {
+            background-color: #2e7d32;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .drink-card h2 {
+                font-size: 1.5rem;
+            }
+
+            .drink-card .price {
+                font-size: 1.4rem;
+            }
+
+            .cart {
+                bottom: 10px;
+                right: 10px;
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>Интернет-Кафе</h1>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="/" class="{% if request.path == '/' %}active{% endif %}" aria-label="Главная страница">Главная</a></li>
+            <li><a href="/tables/" class="{% if request.path == '/tables/' %}active{% endif %}" aria-label="Выбор стола">Выбор стола</a></li>
+            <li><a href="/statistics/" class="{% if request.path == '/statistics/' %}active{% endif %}" aria-label="Статистика">Статистика</a></li>
+            <li><a href="/profile/" class="{% if request.path == '/profile/' %}active{% endif %}" aria-label="Профиль">Профиль</a></li>
+            <li><a href="/menu/" class="{% if request.path == '/menu/' %}active{% endif %}" aria-label="menu">menu</a></li>
+        </ul>
+    </nav>
+</header>
+
+<h1>Меню напитков</h1>
+<div class="menu-container" id="menu-container"></div>
+<div class="cart" id="cart">
+    <h3>Корзина</h3>
+    <div id="cart-items"></div>
+    <p class="total">Итого: <span id="total-price">0</span> ₽</p>
+    <button onclick="checkout()">Оформить заказ</button>
+</div>
+
+<script>
+const drinks = [
+    { name: "Капучино", price: 200, description: "Кофе с густой пеной", image: "{% static 'images/cofi1.jpeg' %}" },
+    { name: "Эспрессо", price: 150, description: "Крепкий черный кофе", image: "{% static 'images/cofi2.jpeg' %}" },
+    { name: "Латте", price: 180, description: "Кофе с молоком", image: "{% static 'images/cofi3.jpeg' %}" },
+    { name: "Чай Матча", price: 220, description: "Зеленый чай с молоком", image: "{% static 'images/cofi4.jpeg' %}" },
+    { name: "Мохито", price: 250, description: "Безалкогольный мятный коктейль", image: "{% static 'images/cofi5.jpeg' %}" },
+    { name: "Американо", price: 160, description: "Кофе с мягким вкусом", image: "{% static 'images/cofi6.jpeg' %}" },
+    { name: "Фраппучино", price: 280, description: "Кофе со льдом и сливками", image: "{% static 'images/cofe.jpeg' %}" }
+];
+
+
+    let cart = [];
+
+    function generateMenu() {
+        const menuContainer = document.getElementById('menu-container');
+        drinks.forEach(drink => {
+            const card = document.createElement('div');
+            card.className = 'drink-card';
+
+            card.innerHTML = `
+                <img src="${drink.image}" alt="${drink.name}">
+                <div class="content">
+                    <h2>${drink.name}</h2>
+                    <p>${drink.description}</p>
+                    <p class="price">${drink.price} ₽</p>
+                    <button onclick="addToCart('${drink.name}', ${drink.price})">Добавить в корзину</button>
+                </div>
+            `;
+
+            menuContainer.appendChild(card);
+        });
+    }
+
+    function addToCart(name, price) {
+        const item = cart.find(item => item.name === name);
+        if (item) {
+            item.quantity += 1;
+        } else {
+            cart.push({ name, price, quantity: 1 });
+        }
+        updateCart();
+    }
+
+    function updateCart() {
+        const cartContainer = document.getElementById('cart');
+        const cartItems = document.getElementById('cart-items');
+        const totalPrice = document.getElementById('total-price');
+
+        cartItems.innerHTML = '';
+        let total = 0;
+
+        cart.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'cart-item';
+
+            div.innerHTML = `
+                <span>${item.name} x${item.quantity}</span>
+                <span>${item.price * item.quantity} ₽</span>
+            `;
+
+            cartItems.appendChild(div);
+            total += item.price * item.quantity;
+        });
+
+        totalPrice.textContent = total;
+        cartContainer.style.display = cart.length > 0 ? 'flex' : 'none';
+    }
+
+    function checkout() {
+        alert('Спасибо за заказ!');
+        cart = [];
+        updateCart();
+    }
+
+    document.addEventListener('DOMContentLoaded', generateMenu);
+</script>
+
+</body>
+</html>

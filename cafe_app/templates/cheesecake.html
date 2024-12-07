@@ -1,0 +1,299 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интернет-Кафе</title>
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+
+        /* Стили для шапки */
+        header {
+            background-color: #1e2a34;
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header .container {
+            width: 90%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            margin: 0;
+            color: #e3f2fd;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: #00bcd4;
+            text-decoration: underline;
+        }
+
+        /* Основной контейнер для меню */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 40px 20px;
+            margin-top: 20px;
+        }
+
+        .item {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .item img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .item h3 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .item p {
+            font-size: 1rem;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .item span {
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: #2c3e50;
+        }
+
+        .btn-add-to-cart {
+            background-color: #00bcd4;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-add-to-cart:hover {
+            background-color: #0097a7;
+            transform: scale(1.05);
+        }
+
+        .btn-add-to-cart:active {
+            transform: scale(1);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 999;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Адаптивные стили */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 10px;
+            }
+
+            nav ul li {
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .item h3 {
+                font-size: 1.4rem;
+            }
+
+            .item p {
+                font-size: 0.9rem;
+            }
+
+            .item span {
+                font-size: 1.2rem;
+            }
+
+            .btn-add-to-cart {
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>Интернет-Кафе</h1>
+        <nav>
+            <ul>
+                <li><a href="/" class="active" aria-label="Главная страница">Главная</a></li>
+                <li><a href="/tables/" aria-label="Выбор стола">Выбор стола</a></li>
+                <li><a href="/statistics/" aria-label="Статистика">Статистика</a></li>
+                <li><a href="/profile/" aria-label="Профиль">Профиль</a></li>
+                <li><a href="/menu/" aria-label="Меню">Меню</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="container" id="menuContainer"></div>
+<div class="notification" id="notification">Товар добавлен в корзину!</div>
+
+<script>
+    // Класс для товара с фото
+    class MenuItem {
+        constructor(name, price, description, imageUrl) {
+            this.name = name;
+            this.price = price;
+            this.description = description;
+            this.imageUrl = imageUrl;  // Новый параметр для фото
+        }
+
+        createItemElement() {
+            const itemElement = document.createElement('div');
+            itemElement.classList.add('item');
+            itemElement.innerHTML = `
+                <img src="${this.imageUrl}" alt="${this.name}" class="item-image">
+                <h3>${this.name}</h3>
+                <p>${this.description}</p>
+                <span>${this.price}</span>
+                <button class="btn-add-to-cart">Добавить в корзину</button>
+            `;
+            const button = itemElement.querySelector('.btn-add-to-cart');
+            button.addEventListener('click', () => this.addToCart());
+            return itemElement;
+        }
+
+        addToCart() {
+            showNotification(`"${this.name}" добавлен в корзину!`);
+        }
+    }
+
+    // Данные снэков и десертов с изображениями
+    const snacksAndDesserts = [
+        new MenuItem('Шоколадный торт', '500₽', 'Нежный шоколадный торт с кремом и орехами.', '{% static "images/chskek1.jpeg" %}'),
+        new MenuItem('Сэндвич с курицей', '200₽', 'Сэндвич с куриным филе, свежими овощами и соусом.', '{% static "images/chskek2.jpeg" %}'),
+        new MenuItem('Мороженое ванильное', '150₽', 'Классическое ванильное мороженое с шоколадной глазурью.', '{% static "images/chskek3.jpeg" %}'),
+        new MenuItem('Пирог с яблоками', '350₽', 'Сочный пирог с яблоками и корицей.', '{% static "images/chskek4.jpeg" %}')
+    ];
+
+    // Функция для генерации меню
+    const generateMenu = () => {
+        const container = document.getElementById('menuContainer');
+        if (!container) return;
+
+        // Используем document fragment для ускорения вставки элементов
+        const fragment = document.createDocumentFragment();
+        
+        snacksAndDesserts.forEach(item => {
+            fragment.appendChild(item.createItemElement());
+        });
+        
+        container.appendChild(fragment);
+    };
+
+    // Показать уведомление
+    const showNotification = (message) => {
+        const notification = document.getElementById('notification');
+        if (!notification) return;
+
+        notification.textContent = message;
+        notification.style.display = 'block';
+        
+        // Убираем уведомление через 2 секунды
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 2000);
+    };
+
+    // Инициализация при загрузке страницы
+    window.onload = generateMenu;
+</script>
+
+</body>
+</html>

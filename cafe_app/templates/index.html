@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Интернет-Кафе</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            background-image: url('{% static "images/font3.webp" %}');
+            background-size: cover;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        header nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        header nav a:hover,
+        header nav a.active {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .hero-banner {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero-banner h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .hero-banner p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .hero-buttons .button {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 18px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .hero-buttons .button:hover {
+            background-color: #218838;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .service-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .service-card h3 {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .service-card p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .special-offer {
+            background-color: #f4f7fc;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .special-offer h2 {
+            font-size: 28px;
+        }
+
+        .special-offer p {
+            font-size: 18px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Мобильная адаптивность */
+        @media (max-width: 768px) {
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>
+            <h1>Интернет-Кафе</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/" class="{% if request.path == '/' %}active{% endif %}" aria-label="Главная страница">Главная</a></li>
+                <li><a href="/tables/" class="{% if request.path == '/tables/' %}active{% endif %}" aria-label="Выбор стола">Выбор стола</a></li>
+                <li><a href="/statistics/" class="{% if request.path == '/statistics/' %}active{% endif %}" aria-label="Статистика">Статистика</a></li>
+                <li><a href="/profile/" class="{% if request.path == '/profile/' %}active{% endif %}" aria-label="Профиль">Профиль</a></li>
+                <li><a href="/menu/" class="{% if request.path == '/menu/' %}active{% endif %}" aria-label="menu">menu</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Герой-блок -->
+        <section class="hero-banner">
+            <h2>Добро пожаловать в [интернет-кафе]!</h2>
+            <p>Ваш комфортный уголок для работы, игр и общения. Присоединяйтесь к нам и наслаждайтесь лучшими условиями!</p>
+            <div class="hero-buttons">
+                <a href="/tables/" class="button">Забронировать место</a>
+                <a href="/services/" class="button">Узнать тарифы</a>
+                <a href="/games/" class="button">Попробовать новые игры</a>
+            </div>
+        </section>
+
+        <!-- Услуги -->
+        <section class="service-section">
+            <h2 class="section-title">Наши Услуги</h2>
+            <div class="service-cards">
+                <div class="service-card">
+                    <img src="{% static 'images/chtoto.png' %}" alt="Аренда компьютеров">
+                    <h3>Аренда ПК</h3>
+                    <p>Мощные компьютеры с быстрым интернетом и широким выбором игр для комфортного времяпрепровождения.</p>
+                </div>
+                <div class="service-card">
+                    <img src="{% static 'images/chtoto2.png' %}" alt="Кофе и закуски">
+                    <h3>Кофе и Закуски</h3>
+                    <p>Уютная атмосфера с чашечкой ароматного кофе и легкими закусками для вашего комфорта.</p>
+                </div>
+                <div class="service-card">
+                    <img src="{% static 'images/chtoto3.png' %}" alt="Печать и сканирование">
+                    <h3>Печать и Сканирование</h3>
+                    <p>Быстрая печать и сканирование документов с удобной оплатой.</p>
+                </div>
+                <div class="service-card">
+                    <img src="{% static 'images/chtoto4.png' %}" alt="Печать и сканирование">
+                    <h3>Печать и Сканирование</h3>
+                    <p>Быстрая печать и сканирование документов с удобной оплатой.</p>
+                </div>
+                <div class="service-card">
+                    <img src="{% static 'images/chtoto4.png' %}" alt="Печать и сканирование">
+                    <h3>Печать и Сканирование</h3>
+                    <p>Быстрая печать и сканирование документов с удобной оплатой.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Специальные предложения -->
+        <section class="special-offer">
+            <h2>Акции и Скидки</h2>
+            <p>Не пропустите наши актуальные предложения! Приятные скидки для новых клиентов и бонусы для постоянных.</p>
+            <a href="{% url 'promotion_list' %}">Посмотреть акции</a>
+
+
+            
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Интернет-Кафе. Все права защищены.</p>
+    </footer>
+
+</body>
+
+</html>
